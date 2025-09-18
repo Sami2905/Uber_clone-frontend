@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,7 +28,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ClerkProvider>
+          <nav className="px-6 py-3 border-b flex items-center gap-4 text-sm">
+            <a href="/" className="opacity-80 hover:opacity-100">Home</a>
+            <a href="/history" className="opacity-80 hover:opacity-100">History</a>
+            <a href="/support" className="opacity-80 hover:opacity-100">Support</a>
+            <SignedIn>
+              <a href="/admin" className="opacity-80 hover:opacity-100">Admin</a>
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="px-3 py-1 rounded border">Sign in</button>
+              </SignInButton>
+            </SignedOut>
+          </nav>
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );
